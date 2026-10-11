@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Troubleshooting and support
+    url: https://github.com/phaze-logic/SpamChoppa-Releases/blob/main/SUPPORT.md
+    about: Read support guidance before opening a report.
+  - name: Report a security vulnerability privately
+    url: https://github.com/phaze-logic/SpamChoppa-Releases/blob/main/SECURITY.md
+    about: Use the private email channel in the security policy.

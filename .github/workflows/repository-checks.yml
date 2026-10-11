@@ -1,0 +1,79 @@
+name: Repository checks
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  documentation:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Check out public repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Set up Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.13"
+      - name: Check public inventory and documentation links
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import re
+          import subprocess
+
+          root = Path.cwd().resolve()
+          files = subprocess.check_output(["git", "ls-files", "-z"]).decode().split("\0")
+          files = [name for name in files if name]
+          required = {
+              "README.md", "CHANGELOG.md", "CONTRIBUTING.md", "SECURITY.md", "SUPPORT.md",
+              "LICENSE", "NOTICE", ".editorconfig", ".gitattributes", ".gitignore",
+              "docs/README.md", "docs/installation.md", "docs/usage.md", "docs/privacy.md",
+              "docs/troubleshooting.md", "docs/screenshots.md", "docs/releasing.md",
+              ".github/PULL_REQUEST_TEMPLATE.md", ".github/ISSUE_TEMPLATE/bug-report.yml",
+              ".github/ISSUE_TEMPLATE/feature-request.yml", ".github/ISSUE_TEMPLATE/config.yml",
+              ".github/workflows/repository-checks.yml",
+          }
+          errors = [f"Missing required file: {name}" for name in sorted(required - set(files))]
+          special = {"LICENSE", "NOTICE", ".editorconfig", ".gitattributes", ".gitignore"}
+          allowed = {".md", ".png", ".jpg", ".jpeg", ".yml", ".yaml", ".txt"}
+          for name in files:
+              path = Path(name)
+              if name not in special and path.suffix.lower() not in allowed:
+                  errors.append(f"Unsupported public file: {name}")
+              if len(path.parts) > 1 and path.parts[0] not in {"docs", ".github"}:
+                  errors.append(f"Unsupported public directory: {name}")
+              if path.suffix.lower() in {".png", ".jpg", ".jpeg"} and not name.startswith("docs/assets/screenshots/"):
+                  errors.append(f"Image outside screenshot directory: {name}")
+              if path.suffix.lower() != ".md":
+                  continue
+              content = (root / path).read_text(encoding="utf-8")
+              if re.search(r"(?:[A-Z]:[\\/](?:Users|Projects)[\\/]|file://|content://)", content, re.I):
+                  errors.append(f"Private local path in documentation: {name}")
+              content = re.sub(r"^```[^\n]*\n.*?^```[^\n]*$", "", content, flags=re.M | re.S)
+              targets = re.findall(r"!?(?:\[[^\]]*\])\(([^\s)]+)(?:\s+[^)]*)?\)", content)
+              targets += re.findall(r'<img\b[^>]*\bsrc=["\x27]([^"\x27]+)["\x27]', content, flags=re.I)
+              for target in targets:
+                  target = target.strip("<>")
+                  if target.startswith("#") or re.match(r"[a-z][a-z0-9+.-]*:", target, re.I):
+                      continue
+                  target = target.split("#", 1)[0]
+                  if not target:
+                      continue
+                  resolved = ((root / path).parent / target).resolve()
+                  if not resolved.is_relative_to(root) or not resolved.is_file():
+                      errors.append(f"Broken or external local link in {name}: {target}")
+          if not any(name.startswith("docs/releases/") and name.endswith(".md") for name in files):
+              errors.append("No versioned release notes")
+          if not any(name.startswith("docs/assets/screenshots/") and name.endswith(".png") for name in files):
+              errors.append("No app screenshots")
+          if errors:
+              raise SystemExit("\n".join(errors))
+          print(f"Validated {len(files)} public files and all local documentation/image links.")
+          PY

@@ -1,0 +1,37 @@
+# Completed install APKs/checksums belong in GitHub Release assets.
+dist/
+artifacts/
+*.apk
+*.aab
+*.apks
+*.dex
+*.class
+*.jar
+*.aar
+*.zip
+*.7z
+*.tar
+*.gz
+# Exclude private application source, builds, state, and signing material.
+app/
+src/
+build/
+.gradle/
+.cache/
+.keys/
+local-archive/
+*.jks
+*.keystore
+*.p12
+*.pfx
+*.key
+*.pem
+local.properties
+.env
+.env.*
+__pycache__/
+*.pyc
+.vscode/
+.idea/
+Thumbs.db
+.DS_Store

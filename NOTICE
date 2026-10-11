@@ -1,0 +1,16 @@
+SpamChoppa public release notices
+
+Copyright (c) 2026 PhaZe Logic Studios. All rights reserved.
+Original application code, documentation, and artwork are proprietary.
+See LICENSE. This repository supplies public documentation, screenshots,
+and configuration, not application source.
+
+The Bangers typeface is distributed under the SIL Open Font License 1.1.
+Its unchanged license is in docs/licenses/Bangers-OFL.txt.
+Primary upstream: https://github.com/google/fonts/tree/main/ofl/bangers
+Third-party components retain their own copyrights and licenses.
+The font license does not license SpamChoppa's other materials.
+
+Completed install APKs/checksums are distributed as GitHub Release assets.
+GitHub's automatic source archives contain this public repository's
+documentation and configuration only. App source archives are not supplied.
