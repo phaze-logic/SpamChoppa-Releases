@@ -38,18 +38,16 @@ System dialogs differ by device. Read any security warning before deciding wheth
 
 Install the newer APK over the existing app. Android requires the same package and signer for an in-place update. Export a backup first. A differently signed APK cannot update the installed package; export data you want to keep before considering uninstalling.
 
-The verified development certificate for 0.2.10 has subject `CN=Call Harbor Debug, O=Local Development, C=US` and SHA-256 fingerprint:
+The verified development certificate for 0.2.10 has SHA-256 fingerprint:
 
 ```text
 1d88666cbc564eae11814c4c109880709410e1473b1280f5328afa05a9b23e70
 ```
 
-The historical certificate name does not change this APK's SpamChoppa package identity. Downloads are manual; the app has no network updater.
+Downloads are manual; the app has no network updater.
 
-## Migrate from older Call Harbor builds
+## Backup and restore
 
-Older Call Harbor builds use a different Android identifier and remain separate installations. Export JSON from the older app, then import through **SpamChoppa Settings → Backup & restore**. Import replaces SpamChoppa's rules/settings after confirmation and preserves its current Activity; it does not transfer the older app's history. Private daily backups remain with the older installation.
-
-Select SpamChoppa as the default screening app when ready. Export older data you want to keep before uninstalling the older app.
+Export your rules and settings through **SpamChoppa Settings → Backup & restore**. Importing a supported JSON backup replaces rules/settings after confirmation while preserving the receiving app's current Activity. Private daily snapshots stay local to the installation; export data you want to keep before uninstalling.
 
 [Usage](usage.md) · [Troubleshooting](troubleshooting.md) · [Documentation index](README.md)

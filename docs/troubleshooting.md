@@ -4,7 +4,7 @@
 
 Confirm Android 10 or newer, download from [official releases](https://github.com/phaze-logic/SpamChoppa-Releases/releases), and [verify the checksum](installation.md#verify-the-download). Installation permission applies to the browser or file manager opening the APK. Version 0.2.10 is development-signed and debuggable; read Android's warnings.
 
-Updates require the same package and signer. Export data you want to keep before uninstalling to address a signature mismatch. Older Call Harbor builds install separately; follow [migration guidance](installation.md#migrate-from-older-call-harbor-builds).
+Updates require the same package and signer. Export data you want to keep before uninstalling to address a signature mismatch. See [backup and restore guidance](installation.md#backup-and-restore).
 
 ## A caller is not blocked
 
